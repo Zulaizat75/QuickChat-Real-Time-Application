@@ -74,3 +74,7 @@
 .friends:hover span{
     color: white;
 }
+.ls-nav .menu{
+    position: relative;
+    padding: 10px 0px;
+}
