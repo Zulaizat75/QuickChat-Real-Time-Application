@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./LeftSidebar.css";
 import assets from "../../assets/assets";
 import { useNavigate } from "react-router-dom";
@@ -84,6 +84,19 @@ const LeftSidebar = () => {
           messageSeen: true,
         }),
       });
+
+      const uSnap = await getDoc(doc(db, "users", user.id));
+      const uData = uSnap.data();
+      setChat({
+        messagesId:newMessageRef.id,
+        lastMessage:"",
+        rId:userData.id,
+        updatedAt:Date.now(),
+        messageSeen:true,
+        userData:uData
+      })
+      setShowSearch(false)
+      setChatVisible(true)
     } catch (error) {}
   };
 
@@ -105,7 +118,24 @@ const LeftSidebar = () => {
     } catch (error) {
       toast.error(error.message);
     }
+
   };
+
+  useEffect(()=>{
+
+    const updateChatUserData = async () => {
+
+      if (chatUser) {
+        const userRef = doc(db, "users", chatUser.userData.id);
+        const userSnap = await getDoc(userRef);
+        const userData = userSnap.data();
+        setChatUser(prev=>({...prev,userData:userData}));
+      }
+
+    }
+    updateChatUserData();
+
+  },[chatData])
 
   return (
     <div className={`ls ${chatVisible ? "hidden" : ""}`}>

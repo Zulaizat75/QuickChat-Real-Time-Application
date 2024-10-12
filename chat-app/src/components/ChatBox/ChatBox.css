@@ -115,6 +115,10 @@
     font-weight: 500;
     color: #383838;
 }
+.chat-user .arrow{
+    display: none;
+}
+
 @media (max-width:900px) {
     .chat-box{
         width: 100%;
