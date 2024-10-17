@@ -28,12 +28,16 @@
 }
 .login-form button{
     padding: 10px;
-    background-color: #077EFF;
+    background-color: #5f9ea0;
     color: white;
     font-size: 16px;
     border: none;
-    border-radius: 4px;
+    border-radius: 24px;
     cursor: pointer;
+}
+.login-form button:hover{
+    background-color: #426E70;
+    color: aliceblue;
 }
 .login-term{
     display: flex;
@@ -59,6 +63,10 @@
     font-weight: 500;
     color:#077EFF;
     cursor: pointer;
+}
+.login-toggle span:hover,
+.login-term span:hover{
+    color:#5f9ea0;
 }
 @media (max-width:768px) {
     .login{
