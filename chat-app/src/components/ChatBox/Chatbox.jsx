@@ -13,7 +13,7 @@ import { db } from "../../config/firebase";
 import upload from "../../lib/upload";
 import { toast } from "react-toastify";
 
-const Chatbox = ({ toggleSidebar }) => {
+const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
   const {
     userData,
     messagesId,
@@ -25,6 +25,15 @@ const Chatbox = ({ toggleSidebar }) => {
   } = useContext(AppContext);
 
   const [input, setInput] = useState("");
+
+  const formatDate = (timestamp) => {
+    const date = timestamp.toDate();
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   const sendMessage = async () => {
     try {
@@ -63,6 +72,61 @@ const Chatbox = ({ toggleSidebar }) => {
       toast.error(error.message);
     }
     setInput("");
+  };
+
+  useEffect(() => {
+    if (messagesId) {
+      const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
+        setMessages(res.data().messages.reverse());
+        console.log(res.data().messages.reverse());
+      });
+      return () => {
+        unSub();
+      };
+    }
+  }, [messagesId]);
+
+  const renderMessages = () => {
+    let lastDisplayedDate = null;
+
+    return messages.map((msg, index) => {
+      const messageDate = msg.createdAt.toDate();
+      const displayDate = formatDate(msg.createdAt);
+
+      // Check if the message date is different from the last displayed date
+      const isToday = messageDate.toDateString() === new Date().toDateString();
+      const showDate = lastDisplayedDate !== messageDate.toDateString();
+
+      if (showDate) {
+        lastDisplayedDate = messageDate.toDateString();
+      }
+
+      return (
+        <div key={index}>
+          {showDate && (
+            <div className="chat-date">{isToday ? "Today" : displayDate}</div>
+          )}{}
+          <div className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
+            {msg.image ? (
+              <img className="msg-img" src={msg.image} alt="" />
+            ) : (
+              <p className="msg">{msg.text}</p>
+            )}
+            <div>
+              <img
+                src={
+                  msg.sId === userData.id
+                    ? userData.avatar
+                    : chatUser.userData.avatar
+                }
+                alt=""
+              />
+              <p>{convertTimestamp(msg.createdAt)}</p>
+            </div>
+          </div>
+        </div>
+      );
+    });
   };
 
   const sendImage = async (e) => {
@@ -108,7 +172,7 @@ const Chatbox = ({ toggleSidebar }) => {
   const convertTimestamp = (timestamp) => {
     let date = timestamp.toDate();
     const hour = date.getHours();
-    const minute = date.getMinutes();
+    const minute = date.getMinutes().toString().padStart(2, "0");
     if (hour > 12) {
       return hour - 12 + ":" + minute + " PM";
     } else {
@@ -116,20 +180,12 @@ const Chatbox = ({ toggleSidebar }) => {
     }
   };
 
-  useEffect(() => {
-    if (messagesId) {
-      const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
-        setMessages(res.data().messages.reverse());
-        console.log(res.data().messages.reverse());
-      });
-      return () => {
-        unSub();
-      };
-    }
-  }, [messagesId]);
-
   return chatUser ? (
-    <div className={`chat-box ${chatVisible ? "" : "hidden"}`}>
+    <div
+      className={`chat-box ${chatVisible ? "" : "hidden"} ${
+        rightSidebarVisible ? "" : "expanded"
+      }`}
+    >
       <div className="chat-user">
         <img src={chatUser.userData.avatar} alt="" />
         <p>
@@ -139,8 +195,8 @@ const Chatbox = ({ toggleSidebar }) => {
           ) : null}
         </p>
         <img
-          src={assets.help_icon}
-          className="help"
+          src={assets.more_icon}
+          className={`more ${rightSidebarVisible ? "rotated" : ""}`}
           alt=""
           onClick={toggleSidebar}
         />
@@ -152,31 +208,7 @@ const Chatbox = ({ toggleSidebar }) => {
         />
       </div>
 
-      <div className="chat-msg">
-        {messages.map((msg, index) => (
-          <div
-            key={index}
-            className={msg.sId === userData.id ? "s-msg" : "r-msg"}
-          >
-            {msg["image"] ? (
-              <img className="msg-img" src={msg.image} alt="" />
-            ) : (
-              <p className="msg">{msg.text}</p>
-            )}
-            <div>
-              <img
-                src={
-                  msg.sId === userData.id
-                    ? userData.avatar
-                    : chatUser.userData.avatar
-                }
-                alt=""
-              />
-              <p>{convertTimestamp(msg.createdAt)}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <div className="chat-msg">{renderMessages()}</div>
 
       <div className="chat-input">
         <input

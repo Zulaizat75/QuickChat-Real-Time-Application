@@ -41,7 +41,8 @@ const AppContextProvider = (props) => {
                 }
             }, 60000);
         } catch (error) {
-            
+            console.error("Error loading user data: ", error);
+            toast.error("Failed to load user data.");
         }
     }
 

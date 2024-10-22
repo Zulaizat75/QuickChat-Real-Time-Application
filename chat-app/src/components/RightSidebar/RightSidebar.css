@@ -74,6 +74,17 @@
 .rs button:hover {
     opacity: 0.8;
 }
+
+.right-sidebar {
+    transition: opacity 0.3s ease, width 0.3s ease; /* Transition for opacity and width */
+}
+
+.right-sidebar.hidden {
+    opacity: 0;
+    width: 0; /* Collapse the sidebar width */
+    pointer-events: none; /* Prevent interaction when hidden */
+}
+
 @media (max-width:900px) {
     .rs{
         display: none;

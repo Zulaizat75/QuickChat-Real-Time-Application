@@ -18,7 +18,8 @@ const Chat = () => {
 
   const toggleSidebar = () => {
     setRightSidebarVisible(!rightSidebarVisible);
-  };
+
+};
 
   return (
     <div className={`chat ${rightSidebarVisible ? '' : 'sidebar-hidden'}`}>
@@ -27,7 +28,7 @@ const Chat = () => {
       ) : (
         <div className={`chat-container ${rightSidebarVisible ? '' : 'expand-chatbox'}`}>
           <LeftSidebar />
-          <Chatbox toggleSidebar={toggleSidebar} />
+          <Chatbox toggleSidebar={toggleSidebar} rightSidebarVisible={rightSidebarVisible} />
           {rightSidebarVisible && <RightSidebar />}
         </div>
       )}

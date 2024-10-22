@@ -4,7 +4,7 @@ import assets from "../../assets/assets";
 import { logout } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
 
-const RightSidebar = () => {
+const RightSidebar = ( className ) => {
   const { chatUser, messages } = useContext(AppContext);
   const [msgImages, setMsgImages] = useState([]);
 
@@ -19,6 +19,7 @@ const RightSidebar = () => {
   }, [messages]);
 
   return chatUser ? (
+    <div className={`right-sidebar ${className}`}>
     <div className='rs'>
       <div className="rs-profile">
         <img src={chatUser.userData.avatar} alt="" />
@@ -40,6 +41,7 @@ const RightSidebar = () => {
         </div>
       </div>
       <button onClick={() => logout()}>Logout</button>
+    </div>
     </div>
   ) : (
     <div className="rs rs-hidden">
