@@ -13,9 +13,16 @@ import { db } from "../../config/firebase";
 import upload from "../../lib/upload";
 import { toast } from "react-toastify";
 
-const Chatbox = () => {
-  const { userData, messagesId, chatUser, messages, setMessages, chatVisible, setChatVisible } =
-    useContext(AppContext);
+const Chatbox = ({ toggleSidebar }) => {
+  const {
+    userData,
+    messagesId,
+    chatUser,
+    messages,
+    setMessages,
+    chatVisible,
+    setChatVisible,
+  } = useContext(AppContext);
 
   const [input, setInput] = useState("");
 
@@ -60,7 +67,6 @@ const Chatbox = () => {
 
   const sendImage = async (e) => {
     try {
-      
       const fileUrl = await upload(e.target.files[0]);
 
       if (fileUrl && messagesId) {
@@ -94,23 +100,21 @@ const Chatbox = () => {
           }
         });
       }
-
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
   const convertTimestamp = (timestamp) => {
     let date = timestamp.toDate();
     const hour = date.getHours();
     const minute = date.getMinutes();
-    if (hour>12) {
-      return hour-12 + ":" + minute + " PM";
-    }
-    else{
+    if (hour > 12) {
+      return hour - 12 + ":" + minute + " PM";
+    } else {
       return hour + ":" + minute + " AM";
     }
-  }
+  };
 
   useEffect(() => {
     if (messagesId) {
@@ -129,21 +133,45 @@ const Chatbox = () => {
       <div className="chat-user">
         <img src={chatUser.userData.avatar} alt="" />
         <p>
-          {chatUser.userData.name} {Date.now()-chatUser.userData.lastSeen <= 70000 ?<img className="dot" src={assets.green_dot} alt="" /> : null}
+          {chatUser.userData.name}{" "}
+          {Date.now() - chatUser.userData.lastSeen <= 70000 ? (
+            <img className="dot" src={assets.green_dot} alt="" />
+          ) : null}
         </p>
-        <img src={assets.help_icon} className="help" alt="" />
-        <img onClick={() => setChatVisible(false)} src={assets.arrow_icon} alt="" className="arrow" />
+        <img
+          src={assets.help_icon}
+          className="help"
+          alt=""
+          onClick={toggleSidebar}
+        />
+        <img
+          onClick={() => setChatVisible(false)}
+          src={assets.arrow_icon}
+          alt=""
+          className="arrow"
+        />
       </div>
 
       <div className="chat-msg">
         {messages.map((msg, index) => (
-          <div key={index} className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
-            {msg["image"]
-            ? <img className="msg-img" src={msg.image} alt="" />
-            : <p className="msg">{msg.text}</p>
-            }
+          <div
+            key={index}
+            className={msg.sId === userData.id ? "s-msg" : "r-msg"}
+          >
+            {msg["image"] ? (
+              <img className="msg-img" src={msg.image} alt="" />
+            ) : (
+              <p className="msg">{msg.text}</p>
+            )}
             <div>
-              <img src={msg.sId === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
+              <img
+                src={
+                  msg.sId === userData.id
+                    ? userData.avatar
+                    : chatUser.userData.avatar
+                }
+                alt=""
+              />
               <p>{convertTimestamp(msg.createdAt)}</p>
             </div>
           </div>
@@ -157,7 +185,13 @@ const Chatbox = () => {
           type="text"
           placeholder="Send a message"
         />
-        <input onChange={sendImage}type="file" id="image" accept="image/png, image/jpeg" hidden />
+        <input
+          onChange={sendImage}
+          type="file"
+          id="image"
+          accept="image/png, image/jpeg"
+          hidden
+        />
         <label htmlFor="image">
           <img src={assets.gallery_icon} alt="" />
         </label>
@@ -167,7 +201,7 @@ const Chatbox = () => {
   ) : (
     <div className={`chat-welcome ${chatVisible ? "" : "hidden"}`}>
       <img src={assets.logo_icon} alt="" />
-      <p>Chat anytime, anywhere</p>
+      <p>Quick chat anytime, anywhere</p>
     </div>
   );
 };

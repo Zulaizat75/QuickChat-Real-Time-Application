@@ -2,6 +2,9 @@
     height: 75vh;
     position: relative;
     background-color: #F1F5FF;
+    width: 100%;
+    flex: 3;
+    transition: flex 0.3s ease;
 }
 .chat-user{
     padding: 10px 15px;
@@ -42,6 +45,9 @@
     width: 30px;
     cursor: pointer;
 }
+.chat-input img:hover {
+    opacity: 0.8;
+}
 .chat-input label{
     display: flex;
 }
@@ -52,6 +58,9 @@
     flex: 1;
     border: none;
     outline: none;
+}
+.chat-input input:focus {
+    background-color: #f8f8f8;
 }
 .chat-msg{
     height: calc(100% - 70px);

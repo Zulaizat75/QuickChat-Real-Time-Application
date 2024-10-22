@@ -1,5 +1,5 @@
 .ls{
-    background: #001030;
+    background: #b4b4a5;
     color: white;
     height: 75vh;
 }
@@ -12,7 +12,7 @@
     align-items: center;
 }
 .ls-nav .logo{
-    max-width: 140px;
+    max-width: 160px;
 }
 .ls-nav .menu img{
     max-height: 20px;
@@ -20,7 +20,7 @@
     cursor: pointer;
 }
 .ls-search{
-    background-color: #002670;
+    background-color: #cacbba;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -38,7 +38,7 @@
     font-size: 11px;
 }
 .ls-search input::placeholder{
-    color: #c8c8c8;
+    color: #161614;
 }
 .ls-list{
     display: flex;
@@ -59,17 +59,18 @@
     padding: 10px 20px;
     cursor: pointer;
     font-size: 13px;
+    color: black;
 }
 .friends div{
     display: flex;
     flex-direction: column;
 }
 .friends span{
-    color: #9f9f9f;
+    color: #090f10;
     font-size: 11px;
 }
 .friends:hover{
-    background-color: #077EFF;
+    background-color: #558e90;
 }
 .friends:hover span{
     color: white;

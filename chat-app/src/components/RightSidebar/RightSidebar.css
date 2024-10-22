@@ -4,6 +4,9 @@
     position: relative;
     height: 75vh;
     overflow-y: scroll;
+    width: 300px;
+    flex: 1;
+    transition: flex 0.3s ease;
 }
 .rs-profile{
     padding-top: 60px;
@@ -51,6 +54,9 @@
     border-radius: 4px;
     cursor: pointer;
 }
+.rs-media div img:hover{
+    opacity: 0.8;
+}
 .rs button{
     position: absolute;
     bottom: 20px;
@@ -64,6 +70,9 @@
     padding: 10px 65px;
     border-radius: 20px;
     cursor: pointer;
+}
+.rs button:hover {
+    opacity: 0.8;
 }
 @media (max-width:900px) {
     .rs{
