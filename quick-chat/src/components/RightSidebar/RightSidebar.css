@@ -87,6 +87,6 @@
 
 @media (max-width:900px) {
     .rs{
-        display: none;
+        /* display: none; */
     }
 }
