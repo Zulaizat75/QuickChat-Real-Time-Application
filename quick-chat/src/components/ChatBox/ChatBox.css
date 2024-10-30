@@ -146,13 +146,17 @@
   color: #383838;
 }
 .chat-user .arrow {
-  display: none;
+  /* display: none; */
 }
 
+.hidden {
+  transform: translateX(100%);
+  opacity: 0;                  
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
 .more {
   transition: transform 0.3s ease;
 }
-
 .more.rotated {
   transform: rotate(90deg);
 }

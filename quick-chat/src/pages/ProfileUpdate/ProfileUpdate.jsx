@@ -10,74 +10,68 @@ import upload from "../../lib/upload";
 import { AppContext } from "../../context/AppContext";
 
 const ProfileUpdate = () => {
-
   const navigate = useNavigate();
+  const { setUserData } = useContext(AppContext);
 
   const [image, setImage] = useState(false);
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [uid,setUid] = useState("");
-  const [prevImage,setPrevImage] = useState("");
-  const {setUserData} = useContext(AppContext);
+  const [uid, setUid] = useState("");
+  const [prevImage, setPrevImage] = useState("");
 
-  const ProfileUpdate = async (event) => {
+  const handleProfileUpdate = async (event) => {
     event.preventDefault();
+    if (!name) {
+      toast.error("Name is required");
+      return;
+    }
     try {
+      const docRef = doc(db, "users", uid);
       
-      if (!prevImage && !image) {
-        toast.error("Upload profile picture")
-      }
-      const docRef = doc(db,'users',uid);
       if (image) {
         const imgUrl = await upload(image);
         setPrevImage(imgUrl);
-        await updateDoc(docRef,{
-            avatar:imgUrl,
-            bio:bio,
-            name:name
-        })
+        await updateDoc(docRef, {
+          avatar: imgUrl,
+          bio,
+          name
+        });
+      } else {
+        await updateDoc(docRef, { bio, name });
       }
-      else{
-        await updateDoc(docRef,{
-          bio:bio,
-          name:name
-        })
-      }
+
       const snap = await getDoc(docRef);
       setUserData(snap.data());
-      navigate('/chat');
+      navigate("/chat");
     } catch (error) {
       console.error(error);
       toast.error(error.message);
     }
-  }
+  };
 
-  useEffect(() =>{
-    onAuthStateChanged(auth, async (user)=>{
+  useEffect(() => {
+    onAuthStateChanged(auth, async (user) => {
       if (user) {
-        setUid(user.uid)
-        const docRef = doc(db,"users",user.uid);
+        setUid(user.uid);
+        const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
-        if ((await docSnap).data().name) {
-          setName((await docSnap).data().name);
+        const data = docSnap.data();
+        
+        if (data) {
+          setName(data.name || "");
+          setBio(data.bio || "");
+          setPrevImage(data.avatar || "");
         }
-        if ((await docSnap).data().bio) {
-          setBio((await docSnap).data().bio);
-        }
-        if ((docSnap).data().avatar) {
-          setPrevImage((docSnap).data().avatar);
-        }
+      } else {
+        navigate("/");
       }
-      else{
-        navigate('/')
-      }
-    })
-  },[])
+    });
+  }, [navigate]);
 
   return (
     <div className="profile">
       <div className="profile-container">
-        <form onSubmit={ProfileUpdate}>
+        <form onSubmit={handleProfileUpdate}>
           <h3>Profile Details</h3>
           <label htmlFor="avatar">
             <input
@@ -89,18 +83,28 @@ const ProfileUpdate = () => {
             />
             <img
               src={image ? URL.createObjectURL(image) : assets.avatar_icon}
-              alt=""
+              alt="Upload profile"
             />
             upload profile image
           </label>
-          <input onChange={(e)=>setName(e.target.value)} value={name} type="text" placeholder="Your name" required />
-          <textarea onChange={(e)=>setBio(e.target.bio)} value={bio} placeholder="Write profile bio" ></textarea>
+          <input
+            onChange={(e) => setName(e.target.value)}
+            value={name}
+            type="text"
+            placeholder="Your name"
+            required
+          />
+          <textarea
+            onChange={(e) => setBio(e.target.value)}
+            value={bio}
+            placeholder="Write profile bio"
+          ></textarea>
           <button type="submit">Save</button>
         </form>
         <img
           className="profile-pic"
-          src={image ? URL.createObjectURL(image) : prevImage ? prevImage : assets.logo_icon}
-          alt=""
+          src={image ? URL.createObjectURL(image) : prevImage || assets.logo_icon}
+          alt="Profile pic"
         />
       </div>
     </div>

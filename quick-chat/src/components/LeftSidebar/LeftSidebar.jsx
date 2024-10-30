@@ -48,29 +48,34 @@ const LeftSidebar = () => {
 
   //fetch user data in search
   const inputHandler = async (e) => {
-    const input = e.target.value;
-    if (input) {
-      setShowSearch(true);
-      const userRef = collection(db, "users");
-      const q = query(userRef, where("username", "==", input.toLowerCase()));
       try {
-        const querySnap = await getDocs(q);
-        if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
-          const userExist = chatData.some(
-            (user) => user.rId === querySnap.docs[0].data().id
-          );
-          if (!userExist) setUser(querySnap.docs[0].data());
+        const input = e.target.value;
+        if (input) {
+          setShowSearch(true);
+          const userRef = collection(db, "users");
+          const q = query(userRef, where("username", "==", input.toLowerCase()));
+          const querySnap = await getDocs(q);
+          if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
+            let userExist = false;
+            chatData.map((user) => {
+              if (user.rId === querySnap.docs[0].data().id) {
+                userExist = true;
+              }
+            });
+            if (!userExist) {
+              setUser(querySnap.docs[0].data());
+            }
+          } else {
+            setUser(null);
+          }
         } else {
-          setUser(null);
+          setShowSearch(false);
         }
       } catch (error) {
-        toast.error("Failed to fetch user");
+        toast.error(error.message);
         console.error(error);
       }
-    } else {
-      setShowSearch(false);
-    }
-  };
+    };
 
   const addChat = async () => {
     const messagesRef = collection(db, "messages");
@@ -139,17 +144,16 @@ const LeftSidebar = () => {
   };
 
   useEffect(() => {
-    let isMounted = true;
     const updateChatUserData = async () => {
       if (chatUser) {
         const userRef = doc(db, "users", chatUser.userData.id);
         const userSnap = await getDoc(userRef);
-        if (isMounted) setChatUser((prev) => ({ ...prev, userData: userSnap.data() }));
+        const userData = userSnap.data();
+        setChatUser(prev=>({...prev,userData:userData}));
       }
     };
     updateChatUserData();
-    return () => {isMounted = false; };
-  }, [chatData, chatUser]);
+  }, [chatData]);
 
   return (
     <div className={`ls ${chatVisible ? "hidden" : ""}`}>
@@ -157,7 +161,7 @@ const LeftSidebar = () => {
         <div className="ls-nav">
           <img src={assets.logo} className="logo" alt="" />
           <div className="menu">
-            <img src={assets.menu_icon} alt="menu icon" onClick={toggleMenu} />
+            <img src={assets.menu_icon} alt="" onClick={toggleMenu} />
             <div className={`sub-menu ${menuVisible ? "visible" : ""}`}>
               <p onClick={() => navigate("/profile")}>Edit Profile</p>
               <hr />

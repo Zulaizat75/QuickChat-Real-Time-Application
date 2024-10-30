@@ -45,12 +45,12 @@
     padding: 10px;
     min-width: 300px;
     border: 1px solid #c9c9c9;
-    outline-color: #077eff;
+    outline-color: #5f9ea0;
 }
 .profile form button{
     border: none;
     color: white;
-    background-color: #077eff;
+    background-color: #5f9ea0;
     padding: 8px;
     font-size: 16px;
     cursor: pointer;

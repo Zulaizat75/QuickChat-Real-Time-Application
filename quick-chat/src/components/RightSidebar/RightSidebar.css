@@ -1,6 +1,6 @@
-.rs{
+.rs {
     color: white;
-    background: #001030;
+    background: #536160;
     position: relative;
     height: 75vh;
     overflow-y: scroll;
@@ -40,6 +40,7 @@
 .rs-media{
     padding: 0px 20px;
     font-size: 13px;
+
 }
 .rs-media div{
     max-height: 180px;
@@ -51,8 +52,10 @@
 }
 .rs-media div img{
     width: 60px;
+    height: 65px;
     border-radius: 4px;
     cursor: pointer;
+    margin: 4px;
 }
 .rs-media div img:hover{
     opacity: 0.8;
@@ -62,7 +65,7 @@
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: #077eff;
+    background: #a4a4a4;
     color: white;
     border: none;
     font-size: 12px;
@@ -75,18 +78,14 @@
     opacity: 0.8;
 }
 
-.right-sidebar {
-    transition: opacity 0.3s ease, width 0.3s ease; /* Transition for opacity and width */
-}
-
 .right-sidebar.hidden {
     opacity: 0;
-    width: 0; /* Collapse the sidebar width */
-    pointer-events: none; /* Prevent interaction when hidden */
+    width: 0;
+    pointer-events: none;
 }
 
 @media (max-width:900px) {
     .rs{
-        /* display: none; */
+        width:100%;
     }
 }

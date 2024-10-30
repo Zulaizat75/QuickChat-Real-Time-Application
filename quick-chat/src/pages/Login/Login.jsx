@@ -9,7 +9,7 @@ const Login = () => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [termsChecked, setTermsChecked] = useState(false); // state for checkbox
+  const [termsChecked, setTermsChecked] = useState(false);
 
   const onSubmitHandler = (event) => {
     event.preventDefault(); //prevent page reload when submit form

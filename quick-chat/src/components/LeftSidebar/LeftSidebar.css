@@ -104,9 +104,11 @@
 .sub-menu p{
     cursor: pointer;
     font-size: 14px;
+    opacity: 0.5;
 }
 .menu:hover .sub-menu{
     display: block;
+    opacity: 1.0;
 }
 .friends.border img{
     border: 3px solid #07fff3;

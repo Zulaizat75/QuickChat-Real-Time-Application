@@ -69,6 +69,7 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
         });
       }
     } catch (error) {
+      console.error("Error sending message:", error);
       toast.error(error.message);
     }
     setInput("");
@@ -88,24 +89,32 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
 
   const renderMessages = () => {
     let lastDisplayedDate = null;
-
+    let earliestMessageOfDay = null; // Track the earliest message of the current day
+  
     return messages.map((msg, index) => {
       const messageDate = msg.createdAt.toDate();
       const displayDate = formatDate(msg.createdAt);
-
-      // Check if the message date is different from the last displayed date
       const isToday = messageDate.toDateString() === new Date().toDateString();
-      const showDate = lastDisplayedDate !== messageDate.toDateString();
-
-      if (showDate) {
+  
+      // If it's a new day, reset earliest message tracking
+      if (lastDisplayedDate !== messageDate.toDateString()) {
         lastDisplayedDate = messageDate.toDateString();
+        earliestMessageOfDay = index; // Set the index of the current message as the earliest
       }
-
+  
+      // Determine if this is the earliest message of the day
+      const showDate = earliestMessageOfDay === index;
+  
+      // Update earliest message if the current message is earlier
+      if (showDate) {
+        earliestMessageOfDay = null; // Reset to prevent showing again in the loop
+      }
+  
       return (
         <div key={index}>
           {showDate && (
             <div className="chat-date">{isToday ? "Today" : displayDate}</div>
-          )}{}
+          )}
           <div className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
             {msg.image ? (
               <img className="msg-img" src={msg.image} alt="" />
@@ -180,6 +189,14 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
     }
   };
 
+  // Send message when Enter key is pressed
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { // Check if Enter is pressed without Shift
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return chatUser ? (
     <div
       className={`chat-box ${chatVisible ? "" : "hidden"} ${
@@ -216,6 +233,7 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
           value={input}
           type="text"
           placeholder="Send a message"
+          onKeyDown={handleKeyDown}
         />
         <input
           onChange={sendImage}
