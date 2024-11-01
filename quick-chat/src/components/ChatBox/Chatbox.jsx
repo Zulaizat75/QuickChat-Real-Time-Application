@@ -13,7 +13,7 @@ import { db } from "../../config/firebase";
 import upload from "../../lib/upload";
 import { toast } from "react-toastify";
 
-const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
+const Chatbox = () => {
   const {
     userData,
     messagesId,
@@ -22,6 +22,8 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
     setMessages,
     chatVisible,
     setChatVisible,
+    rightSidebarVisible,
+    setRightSidebarVisible,
   } = useContext(AppContext);
 
   const [input, setInput] = useState("");
@@ -90,26 +92,26 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
   const renderMessages = () => {
     let lastDisplayedDate = null;
     let earliestMessageOfDay = null; // Track the earliest message of the current day
-  
+
     return messages.map((msg, index) => {
       const messageDate = msg.createdAt.toDate();
       const displayDate = formatDate(msg.createdAt);
       const isToday = messageDate.toDateString() === new Date().toDateString();
-  
+
       // If it's a new day, reset earliest message tracking
       if (lastDisplayedDate !== messageDate.toDateString()) {
         lastDisplayedDate = messageDate.toDateString();
         earliestMessageOfDay = index; // Set the index of the current message as the earliest
       }
-  
+
       // Determine if this is the earliest message of the day
       const showDate = earliestMessageOfDay === index;
-  
+
       // Update earliest message if the current message is earlier
       if (showDate) {
         earliestMessageOfDay = null; // Reset to prevent showing again in the loop
       }
-  
+
       return (
         <div key={index}>
           {showDate && (
@@ -192,17 +194,14 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
   // Send message when Enter key is pressed
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
+      // Check if Enter is pressed without Shift
       e.preventDefault();
       sendMessage();
     }
   };
 
   return chatUser ? (
-    <div
-      className={`chat-box ${chatVisible ? "" : "hidden"} ${
-        rightSidebarVisible ? "" : "expanded"
-      }`}
-    >
+    <div className={`chat-box ${chatVisible ? "" : "hidden"}`}>
       <div className="chat-user">
         <img src={chatUser.userData.avatar} alt="" />
         <p>
@@ -212,16 +211,16 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
           ) : null}
         </p>
         <img
-          src={assets.more_icon}
-          className={`more ${rightSidebarVisible ? "rotated" : ""}`}
-          alt=""
-          onClick={toggleSidebar}
-        />
-        <img
           onClick={() => setChatVisible(false)}
           src={assets.arrow_icon}
           alt=""
           className="arrow"
+        />
+        <img
+          src={assets.more_icon}
+          className={`more ${rightSidebarVisible ? "rotated" : ""}`}
+          alt=""
+          onClick={() => setRightSidebarVisible(!rightSidebarVisible)}
         />
       </div>
 

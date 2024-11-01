@@ -2,6 +2,7 @@
     background: #b4b4a5;
     color: white;
     height: 75vh;
+    width: 25%;
 }
 .ls-top{
     padding: 20px;
@@ -116,8 +117,16 @@
 .friends.border div span{
     color: #07fff3;
 }
+
 @media (max-width:900px) {
-    .ls{
+    .ls {
         width: 100%;
+    }
+
+    .left-hidden {
+        display: none;
+        transform: translateX(100%);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
     }
 }

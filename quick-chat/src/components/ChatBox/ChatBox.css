@@ -2,7 +2,8 @@
   height: 75vh;
   position: relative;
   background-color: #f1f5ff;
-  width: 100%;
+  /*width: 100%;*/
+  /*width: 50%;*/
   flex: 3;
   transition: flex 0.3s ease;
 }
@@ -115,7 +116,7 @@
 }
 .r-msg .msg {
   border-radius: 8px 8px 8px 0px;
-  background-color: #5f9ea0 ;
+  background-color: #5f9ea0;
 }
 .s-msg div,
 .r-msg div {
@@ -145,14 +146,9 @@
   font-weight: 500;
   color: #383838;
 }
-.chat-user .arrow {
-  /* display: none; */
-}
 
-.hidden {
-  transform: translateX(100%);
-  opacity: 0;                  
-  transition: transform 0.3s ease, opacity 0.3s ease;
+.chat-user .arrow {
+  display: none;
 }
 .more {
   transition: transform 0.3s ease;
@@ -168,5 +164,8 @@
   }
   .chat-user .arrow {
     display: block;
+  }
+  .msg-img {
+    max-width: 200px;
   }
 }

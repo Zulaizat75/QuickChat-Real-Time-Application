@@ -33,6 +33,7 @@ const LeftSidebar = () => {
   const [user, setUser] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
 
   // toggle sub menu function
   const toggleMenu = () => setMenuVisible((prev) => !prev);
@@ -46,36 +47,44 @@ const LeftSidebar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  //fetch user data in search
-  const inputHandler = async (e) => {
-      try {
-        const input = e.target.value;
-        if (input) {
+  // Debounce the input handler
+  useEffect(() => {
+    const debounceTimer = setTimeout(async () => {
+      if (searchInput) {
+        try {
           setShowSearch(true);
           const userRef = collection(db, "users");
-          const q = query(userRef, where("username", "==", input.toLowerCase()));
+          const q = query(
+            userRef,
+            where("username", "==", searchInput.toLowerCase())
+          );
           const querySnap = await getDocs(q);
           if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
-            let userExist = false;
-            chatData.map((user) => {
-              if (user.rId === querySnap.docs[0].data().id) {
-                userExist = true;
-              }
-            });
+            let userExist = chatData.some(
+              (user) => user.rId === querySnap.docs[0].data().id
+            );
             if (!userExist) {
               setUser(querySnap.docs[0].data());
             }
           } else {
             setUser(null);
           }
-        } else {
-          setShowSearch(false);
+        } catch (error) {
+          toast.error(error.message);
+          console.error(error);
         }
-      } catch (error) {
-        toast.error(error.message);
-        console.error(error);
+      } else {
+        setShowSearch(false);
       }
-    };
+    }, 3000); // Debounce delay timer 3s
+
+    return () => clearTimeout(debounceTimer); // Clear the timer on component unmount or input change
+  }, [searchInput, chatData, userData.id]);
+
+  //fetch user data in search
+  const inputHandler = async (e) => {
+    setSearchInput(e.target.value);
+  };
 
   const addChat = async () => {
     const messagesRef = collection(db, "messages");
@@ -149,14 +158,15 @@ const LeftSidebar = () => {
         const userRef = doc(db, "users", chatUser.userData.id);
         const userSnap = await getDoc(userRef);
         const userData = userSnap.data();
-        setChatUser(prev=>({...prev,userData:userData}));
+        setChatUser((prev) => ({ ...prev, userData: userData }));
       }
     };
     updateChatUserData();
   }, [chatData]);
 
   return (
-    <div className={`ls ${chatVisible ? "hidden" : ""}`}>
+    //   width < 900
+    <div className={`ls ${chatVisible ? "left-hidden" : ""}`}>
       <div className="ls-top">
         <div className="ls-nav">
           <img src={assets.logo} className="logo" alt="" />

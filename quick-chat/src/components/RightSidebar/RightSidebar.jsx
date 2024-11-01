@@ -4,9 +4,16 @@ import assets from "../../assets/assets";
 import { logout } from "../../config/firebase";
 import { AppContext } from "../../context/AppContext";
 
-const RightSidebar = ( className ) => {
-  const { chatUser, messages } = useContext(AppContext);
+const RightSidebar = () => {
+  const {
+    chatUser,
+    messages,
+    rightSidebarVisible,
+    setRightSidebarVisible
+  } = useContext(AppContext);
   const [msgImages, setMsgImages] = useState([]);
+
+  console.log(rightSidebarVisible);
 
   useEffect(() => {
     let tempVar = [];
@@ -19,8 +26,8 @@ const RightSidebar = ( className ) => {
   }, [messages]);
 
   return chatUser ? (
-    <div className={`right-sidebar ${className}`}>
-    <div className='rs'>
+    <div className={`right-sidebar ${rightSidebarVisible ? '':'hide'}`}>
+    <div className={`rs ${rightSidebarVisible ? '':'hide-child'}`}>
       <div className="rs-profile">
         <img src={chatUser.userData.avatar} alt="" />
         <h3>

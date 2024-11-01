@@ -6,9 +6,12 @@ import RightSidebar from "../../components/RightSidebar/RightSidebar";
 import { AppContext } from "../../context/AppContext";
 
 const Chat = () => {
-  const { chatData, userData } = useContext(AppContext);
-  const [loading, setLoading] = useState(true);
-  const [rightSidebarVisible, setRightSidebarVisible] = useState(true);
+  const {
+    chatData,
+    userData,
+    rightSidebarVisible,
+  } = useContext(AppContext);
+  const [ loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (chatData && userData) {
@@ -16,20 +19,19 @@ const Chat = () => {
     }
   }, [chatData, userData]);
 
-  const toggleSidebar = () => {
-    setRightSidebarVisible(!rightSidebarVisible);
-
-};
+  const test = () => {
+    console.log('test')
+  };
 
   return (
-    <div className={`chat ${rightSidebarVisible ? '' : 'sidebar-hidden'}`}>
-      {loading ? (
+    <div className="chat">
+      { loading ? (
         <p className="loading">Loading...</p>
       ) : (
-        <div className={`chat-container ${rightSidebarVisible ? '' : 'expand-chatbox'}`}>
+        <div className={`chat-container ${rightSidebarVisible ? "" : "expand-chatbox"}`}>
           <LeftSidebar />
-          <Chatbox toggleSidebar={toggleSidebar} rightSidebarVisible={rightSidebarVisible} />
-          {rightSidebarVisible && <RightSidebar />}
+          <Chatbox toggleSidebar={test} />
+          <RightSidebar />
         </div>
       )}
     </div>
