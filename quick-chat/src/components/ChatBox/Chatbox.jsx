@@ -191,7 +191,7 @@ const Chatbox = ({ toggleSidebar, rightSidebarVisible }) => {
 
   // Send message when Enter key is pressed
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) { // Check if Enter is pressed without Shift
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
