@@ -27,14 +27,14 @@ const ProfileUpdate = () => {
     }
     try {
       const docRef = doc(db, "users", uid);
-      
+
       if (image) {
         const imgUrl = await upload(image);
         setPrevImage(imgUrl);
         await updateDoc(docRef, {
           avatar: imgUrl,
           bio,
-          name
+          name,
         });
       } else {
         await updateDoc(docRef, { bio, name });
@@ -56,7 +56,7 @@ const ProfileUpdate = () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         const data = docSnap.data();
-        
+
         if (data) {
           setName(data.name || "");
           setBio(data.bio || "");
@@ -71,6 +71,13 @@ const ProfileUpdate = () => {
   return (
     <div className="profile">
       <div className="profile-container">
+        <img
+          className="profile-pic-small"
+          src={
+            image ? URL.createObjectURL(image) : prevImage || assets.logo_icon
+          }
+          alt="Profile pic"
+        />
         <form onSubmit={handleProfileUpdate}>
           <h3>Profile Details</h3>
           <label htmlFor="avatar">
@@ -103,7 +110,9 @@ const ProfileUpdate = () => {
         </form>
         <img
           className="profile-pic"
-          src={image ? URL.createObjectURL(image) : prevImage || assets.logo_icon}
+          src={
+            image ? URL.createObjectURL(image) : prevImage || assets.logo_icon
+          }
           alt="Profile pic"
         />
       </div>

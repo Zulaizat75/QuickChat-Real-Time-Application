@@ -20,6 +20,15 @@
     margin: 20px auto;
     border-radius: 50%;
 }
+.profile-pic-small{
+    display: flex;
+    max-width: 120px;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    margin: 40px auto 20px;
+    border-radius: 50%;
+    display: none;
+}
 .profile form{
     display: flex;
     flex-direction: column;
@@ -55,3 +64,22 @@
     font-size: 16px;
     cursor: pointer;
 }
+@media (max-width: 900px) {
+    .profile-container{
+        display: block;
+        min-width: 50px;
+    }
+    .profile-pic-small{
+        max-width: 120px;
+        display: block;
+    }
+    .profile-pic{
+        display: none;
+        max-width: 120px;
+        margin: 0px auto;
+    }
+    .profile form{
+        gap: 15px;
+        padding: 30px;
+    }
+  }

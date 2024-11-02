@@ -5,7 +5,7 @@ import { signup, login, resetPass } from "../../config/firebase";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  const [currState, setCurrState] = useState("Sign Up");
+  const [currState, setCurrState] = useState("login");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +36,7 @@ const Login = () => {
     <div className="login">
       <img src={assets.logo_big} alt="" className="logo" />
       <form onSubmit={onSubmitHandler} className="login-form">
-        <h2>{currState}</h2>
+        <h2>{currState === "Sign Up" ? "Sign Up" : "Login"}</h2>
         {currState === "Sign Up" ? (
           <input
             onChange={(e) => setUserName(e.target.value)}
@@ -84,7 +84,7 @@ const Login = () => {
           {currState === "Sign Up" ? (
             <p className="login-toggle">
               Already have an account?{" "}
-              <span onClick={() => setCurrState("Login")}>Login Here</span>
+              <span onClick={() => setCurrState("login")}>Login Here</span>
             </p>
           ) : (
             <p className="login-toggle">
@@ -92,7 +92,7 @@ const Login = () => {
               <span onClick={() => setCurrState("Sign Up")}> Click Here</span>
             </p>
           )}
-          {currState === "Login" ? (
+          {currState === "login" ? (
             <p className="login-toggle">
               Forgot Password ?
               <span onClick={() => resetPass(email)}> Reset Here</span>
